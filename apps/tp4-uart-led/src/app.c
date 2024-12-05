@@ -8,6 +8,8 @@
 #include "../../example/inc/app.h"         // <= Su propia cabecera (opcional)
 
 #include "sapi.h"        // <= Biblioteca sAPI
+#include <stdio.h>
+#include <ctype.h>
 
 // FUNCION PRINCIPAL, PUNTO DE ENTRADA AL PROGRAMA LUEGO DE ENCENDIDO O RESET.
 int main(void) {
@@ -17,70 +19,24 @@ int main(void) {
 	boardConfig();
 	uartConfig(UART_USB, 9600);
 
-	uint8_t receivedByte;
+	int indexLed = 0;
+	int size = 4;
 
-	int rgbLed = 0;
-	int ledOne = 0;
-	int ledTwo = 0;
-	int ledThree = 0;
+	uint8_t receivedByte;
+	uint8_t leds[size];
+	leds[0] = CIAA_BOARD_LED;
+	leds[1] = LED1;
+	leds[2] = LED2;
+	leds[3] = LED3;
 
 	// ---------- REPETIR POR SIEMPRE --------------------------
 	while ( TRUE) {
 
-		if (uartReadByte(UART_USB, &receivedByte)) {
+		if (uartReadByte(UART_USB, &receivedByte) && isdigit(receivedByte)) {
+			indexLed = (receivedByte - '0') - 1;
 
-			switch (receivedByte) {
-			case '1':
-				switch (rgbLed) {
-				case 0:
-					gpioWrite( CIAA_BOARD_LED, 1);
-					rgbLed = 1;
-					break;
-				case 1:
-					gpioWrite( CIAA_BOARD_LED, 0);
-					rgbLed = 0;
-					break;
-				}
-				break;
-			case '2':
-				// Bloque de codigo para el LED amarillo
-				switch (ledOne) {
-				case 0:
-					gpioWrite(LED1, 1);
-					ledOne = 1;
-					break;
-				case 1:
-					gpioWrite(LED1, 0);
-					ledOne = 0;
-					break;
-				}
-				break;
-			case '3':
-				// Bloque de codigo para el LED rojo
-				switch (ledTwo) {
-				case 0:
-					gpioWrite(LED2, 1);
-					ledTwo = 1;
-					break;
-				case 1:
-					gpioWrite(LED2, 0);
-					ledTwo = 0;
-					break;
-				}
-				break;
-			case '4':
-				// Bloque de codigo para el LED verde
-				switch (ledThree) {
-				case 0:
-					gpioWrite(LED3, 1);
-					ledThree = 1;
-					break;
-				case 1:
-					gpioWrite(LED3, 0);
-					ledThree = 0;
-					break;
-				}
-				break;
+			if (0 <= indexLed && indexLed < size) {
+				gpioToggle(leds[indexLed]);
 			}
 
 		}
