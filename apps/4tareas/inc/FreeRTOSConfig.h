@@ -60,8 +60,6 @@ to exclude the API function. */
 #define INCLUDE_pcTaskGetTaskName       	0
 #define INCLUDE_xTaskGetCurrentTaskHandle 	1
 
-#define traceTASK_SWITCHED_OUT() MyTaskSwitchedOutHook()
-
 /* Cortex-M specific definitions. */
 #ifdef __NVIC_PRIO_BITS
 	/* __BVIC_PRIO_BITS will be specified when CMSIS is being used. */

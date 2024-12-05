@@ -165,28 +165,6 @@ void task(void *taskParameters) {
 
 }
 
-/*-----------------------------------------------------------*/
-
-void MyTaskSwitchedOutHook(void) {
-	// Obtiene el manejador de la tarea actual
-	TaskHandle_t currentTaskHandle = xTaskGetCurrentTaskHandle();
-
-	if (currentTaskHandle == task2Handle) {
-		pwmWrite(task2.led, 30);
-	}
-
-	if (currentTaskHandle == task3Handle) {
-		pwmWrite(task3.led, 30);
-	}
-
-	if (currentTaskHandle == task4Handle) {
-		pwmWrite(task4.led, 30);
-	}
-
-}
-
-/*-----------------------------------------------------------*/
-
 void vBusyWait(TickType_t ticks) {
 	TickType_t elapsedTicks = 0;
 	TickType_t currentTick = 0;
