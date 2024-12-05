@@ -23,10 +23,6 @@ int main(void) {
 	uint8_t receivedByte;
 	uint8_t message[size];
 
-	for (int i = 0; i < size; i++) {
-		message[i] = "\0";
-	}
-
 	// ---------- REPETIR POR SIEMPRE --------------------------
 	while ( TRUE) {
 
@@ -38,15 +34,25 @@ int main(void) {
 			}
 
 			if (receivedByte == '\r') {
+				message[index] = '\r';
 
-				for (int i = 0; i < size; i++) {
-					uartWriteByte(UART_USB, message[i]);
-				}
+				index = (index + 1) % size;
+				message[index] = '\n';
 
-				for (int i = 0; i < size; i++) {
-					message[i] = "\0";
-				}
+				index = (index + 1) % size;
+				message[index] = '\0';
 
+				uartWriteString(UART_USB, &message);
+
+				/*
+				 * Luego de imprimir a traves de UART, se reinicia
+				 * el valor de index para almacenar los caracteres
+				 * de entrada desde el inicio del arreglo message,
+				 * ya que de no hacer esto se imprimiran los caracteres
+				 * de la insercion anterior junto con los de la
+				 * nueva insercion.
+				 */
+				index = 0;
 			}
 
 		}
