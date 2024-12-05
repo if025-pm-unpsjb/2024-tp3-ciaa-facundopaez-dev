@@ -168,6 +168,7 @@ void task(void *taskParameters) {
 void vBusyWait(TickType_t ticks) {
 	TickType_t elapsedTicks = 0;
 	TickType_t currentTick = 0;
+
 	while (elapsedTicks < ticks) {
 		currentTick = xTaskGetTickCount();
 		while (currentTick == xTaskGetTickCount()) {
@@ -175,4 +176,5 @@ void vBusyWait(TickType_t ticks) {
 		}
 		elapsedTicks++;
 	}
+
 }
